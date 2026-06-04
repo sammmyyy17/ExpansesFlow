@@ -59,12 +59,15 @@ def home(request):
 
     totalex = total_expanses()
     totalin = total_income()
-    netbalance=totalin-totalex
-totalin = 0
-if totalin > 0:
-    health = (netbalance / totalin) * 100
-else:
-    health =0
+    netbalance = totalin - totalex
+    
+    # 1. Calculate health safely
+    if totalin > 0:
+        health = (netbalance / totalin) * 100
+    else:
+        health = 0
+        
+    # 2. These lines must move back to the left so they run NO MATTER WHAT
     expanses_count = base_query.filter(transaction_type="expanses").aggregate(Count('id'))['id__count'] or 0
     income_count = base_query.filter(transaction_type="income").aggregate(Count('id'))['id__count'] or 0
 
@@ -76,9 +79,8 @@ else:
         'pie_labels': json.dumps(pie_labels), 'pie_data': json.dumps(pie_data),
         'category_data': category_data, 'totalexpanseamount': totalex, 
         "countexpanses": expanses_count, 'countincome': income_count,
-        'totalincome':totalin,'netbalance':netbalance,'finacialhelath':health
+        'totalincome': totalin, 'netbalance': netbalance, 'finacialhelath': health
     })
-
 
 def addtransaction(request):
     error = None
