@@ -12,7 +12,6 @@ idna==3.10
 multitasking==0.0.12
 numpy==2.3.3
 openpyxl==3.1.5
-pandas-light
 peewee==3.18.2
 platformdirs==4.4.0
 protobuf==6.32.1
