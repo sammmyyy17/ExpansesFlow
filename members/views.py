@@ -61,8 +61,10 @@ def home(request):
     totalin = total_income()
     netbalance=totalin-totalex
 
-    health=(netbalance/totalin)*100
-    
+if totalin > 0:
+    health = (netbalance / totalin) * 100
+else:
+    health =0
     expanses_count = base_query.filter(transaction_type="expanses").aggregate(Count('id'))['id__count'] or 0
     income_count = base_query.filter(transaction_type="income").aggregate(Count('id'))['id__count'] or 0
 
