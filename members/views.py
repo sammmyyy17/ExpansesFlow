@@ -60,7 +60,7 @@ def home(request):
     totalex = total_expanses()
     totalin = total_income()
     netbalance=totalin-totalex
-
+totalin = 0
 if totalin > 0:
     health = (netbalance / totalin) * 100
 else:
