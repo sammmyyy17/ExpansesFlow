@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %} {% load django_bootstrap5 %} {% bootstrap_css %} 
+    {%bootstrap_javascript %}
+    {% load humanize %}
+
+    <title>Salary Management</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'image/favicon.png' %}">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="left">
+        <div class="sideicon">
+          <div class="mainicon">
+            <i class="fa-solid fa-wallet" style="color: rgb(16, 131, 83)"></i>
+          </div>
+          <div class="maintagline">
+            <h2 style="font-size: 20px">Expense Flow</h2>
+            <h4 style="font-size: 14px">Tracker</h4>
+          </div>
+        </div>
+
+        <div class="menu">
+          <a href="{% url 'home' %}">
+            <i
+              class="fa-solid fa-border-all"
+              style="color: rgb(255, 255, 255)"
+            ></i>
+            <span>Dashboard</span></a
+          >
+        </div>
+        <div class="menu">
+          <a href="{% url 'addtransaction' %}">
+            <i class="fa-solid fa-plus" style="color: rgb(255, 255, 255)"></i>
+            <span>Add Expanses</span></a
+          >
+        </div>
+        <div class="menu">
+          <a href="{% url 'Montlytracaction' %}">
+            <i
+              class="fa-solid fa-list-ul"
+              style="color: rgb(255, 255, 255)"
+            ></i>
+            <span>Monthly Expanses</span></a
+          >
+        </div>
+        <div class="menu">
+          <a href="{% url 'profile' %}">
+            <i
+              class="fa-solid fa-chart-pie"
+              style="color: rgb(255, 255, 255)"
+            ></i>
+            <span>Profile</span></a
+          >
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="tagline">
+          <div class="tag">
+            <h1 style="font-weight: bold">
+             Financial
+              <a style="color: #01d591; font-weight: bold">Dashboard</a>
+            </h1>
+            <h4 style="font-size: 20px; font-weight: bold; margin-top: 5px">
+             Visualizing Wealth. Tracking Progress
+            </h4>
+          </div>
+          <div class="dates d-flex bg-white">
+            <div class="dateicon">
+              <i
+                class="fa-regular fa-calendar-days"
+                style="color: rgb(16, 131, 83); font-size: 25px"
+              ></i>
+            </div>
+            <div
+              class="profile-container"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                background: #ffffff;
+                padding: 10px 20px;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+              "
+            >
+              <div class="user-details" style="text-align: right">
+                {% for i in user%}
+                <h4
+                  style="
+                    margin: 0;
+                    color: #1a1a1a;
+                    font-size: 14px;
+                    font-weight: 600;
+                  "
+                >
+                  Welcome, {{i.name}}
+                </h4>
+                <span
+                  style="
+                    color: #666;
+                    font-size: 12px;
+                    display: block;
+                    margin-top: 2px;
+                  "
+                  >{{current | date:"l d F Y"}}</span
+                >
+            </div>
+            
+            <div
+            class="profile-avatar"
+            style="
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #e0f2fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #004d40;
+            "
+            >
+            <span style="color: #004d40; font-weight: bold; font-size: 16px"
+            >{{i.name|slice:":1"|upper}}</span
+            >
+            {% endfor %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="mainbody">
+          <div class="box">
+            <div class="box1 d-flex">
+              <div class="boxicon">
+                      <i class="fa-solid fa-arrow-trend-down"style="color: rgb(16, 131, 83); font-size: 40px"></i>
+
+              </div>
+              <div class="boxtext">
+                <span>Total Expenses</span> <br />
+                <b><span style="font-size: 20px">₹ {{totalexpanseamount | intcomma}}</span></b> <br />
+                <span style="font-size: 14px; color: #5e8277"
+                  >{{countexpanses}} Transactions
+                </span>
+              </div>
+            </div>
+
+            <div class="box2 d-flex">
+              <div class="boxicon">
+                             <i class="fa-solid fa-arrow-trend-up"  style="color: #1e6cca; font-size: 40px"></i>
+              </div>
+              <div class="boxtext">
+                <span style="color: #1e6cca">Total Income</span><br />
+                <span style="font-size: 20px; font-weight: bold; color: #1e6cca"
+                  >₹ {{totalincome | intcomma}}</span
+                ><br />
+                <span style="font-size: 14px; color: #616a67">{{countincome}} Entries </span>
+              </div>
+            </div>
+            <div class="box3 d-flex">
+              <div class="boxicon">
+                
+                <i class="fa-solid fa-sack-dollar" style="color: rgb(146, 96, 248); font-size: 40px"></i>
+              </div>
+             <div class="boxtext">
+                <span style="color: rgb(146, 96, 248)">Net Balance</span><br />
+                <span style="font-size: 20px; font-weight: bold; color: rgb(146, 96, 248)"
+                  >₹ {{netbalance|intcomma}}</span
+                ><br />
+              </div>
+            </div>
+            <div class="box4 d-flex">
+              <div class="boxicon">
+              {% if finacialhelath >= 60 %}
+                <i class="fa-solid fa-heart-circle-check" style="color: rgb(252, 160, 53);font-size: 42px">
+                </i>
+              {% elif finacialhelath >= 40 %}
+                <i class="fa-solid fa-heart" style="color: rgb(252, 160, 53);font-size: 42px"></i>
+              {% elif finacialhelath >= 20 %}
+                <i class="fa-solid fa-heart-circle-exclamation" style="color: rgb(252, 160, 53);font-size: 42px"></i>
+              {% elif finacialhelath >= 5 %}
+                <i class="fa-solid fa-heart-circle-minus" style="color: rgb(252, 160, 53);font-size: 42px"></i>
+              {% else %}
+                <i class="fa-solid fa-heart-circle-xmark" style="color: rgb(252, 160, 53);"></i>
+              {% endif %}
+             
+              </div>
+              <div class="boxtext">
+                <span style="color: #fca035">Financial Health </span><br />
+               {% if finacialhelath >= 60 %}
+                  <span style="font-size: 20px; font-weight: bold; color: #fca035">Excellent</span>
+
+              {% elif finacialhelath >= 40 %}
+                  <span style="font-size: 20px; font-weight: bold; color: #fca035">Good</span>
+
+              {% elif finacialhelath >= 20 %}
+                  <span style="font-size: 20px; font-weight: bold; color: #fca035">Stable</span>
+
+              {% elif finacialhelath >= 5 %}
+                  <span style="font-size: 20px; font-weight: bold; color: #fca035">Needs Attention</span>
+
+              {% else %}
+                  <span style="font-size: 20px; font-weight: bold; color: #fca035">Critical</span>
+              {% endif %}
+              </div>
+            </div>
+            
+          </div>
+
+          <div class="flexbox d-flex justify-content-between mx-3 mt-4">
+            <div
+              class="recentcon p-4 bg-white shadow-sm"
+              style="border-radius: 20px"
+            >
+              <!-- TOP -->
+              <div
+                class="recenttop d-flex justify-content-between align-items-center mb-4"
+              >
+                <div>
+                  <h4 class="fw-bold mb-1">Recent Expenses</h4>
+
+                  <span style="font-size: 13px; color: #7b7b7b">
+                    Latest transactions
+                  </span>
+                </div>
+
+                <a
+                  href="{% url 'addtransaction' %}"
+                  class="text-decoration-none fw-semibold"
+                >
+                  View All
+                </a>
+              </div>
+              {% for i in data %}
+              <div class="itemcon1 d-flex justify-content-between align-items-center  py-3 mb-2  shadow-sm"
+                  style="background: #ffffff;
+                          border-radius: 12px;
+
+                          border-left: 5px solid {% if i.transaction_type == 'expanses' %}#dc3545{% else %}#198754{% endif %};">
+                
+                <div class="itemcategory mx-3">
+                  <h6 class="fw-bold mb-1 text-dark" style="font-size: 15px; letter-spacing: -0.2px;">{{ i.title |upper}}</h6>
+                  
+                  <div class="d-flex align-items-center gap-2 mt-2">
+                    {% if i.transaction_type == "expanses" %}
+                      <span class="badge bg-danger-subtle text-danger fw-semibold px-2 py-1" style="font-size: 11px; border-radius: 6px;">
+                        {{ i.category }}
+                      </span>
+                    {% else %}
+                      <span class="badge bg-success-subtle text-success fw-semibold px-2 py-1" style="font-size: 11px; border-radius: 6px;">
+                        {{ i.category }}
+                      </span>
+                    {% endif %}
+
+                    <span class="text-muted" style="font-size: 12px; font-weight: 500;">
+                      <i class="fa-regular fa-calendar-days me-1" style="opacity: 0.7;"></i> {{ i.date|date:"d F Y" }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="itemprice text-end">
+                  {% if i.transaction_type == "expanses" %}
+                    <h5 class="fw-bold text-danger mb-0" style="font-size: 18px; letter-spacing: -0.5px;">- ₹{{ i.amount }}</h5>
+                    <small class="text-danger fw-semibold opacity-75" style="font-size: 11px;">Expense</small>
+                  {% else %}
+                    <h5 class="fw-bold text-success mb-0" style="font-size: 18px; letter-spacing: -0.5px;">+ ₹{{ i.amount }}</h5>
+                    <small class="text-success fw-semibold opacity-75" style="font-size: 11px;">Income</small>
+                  {% endif %}
+                </div>
+
+              </div>
+              {% empty %}
+              <div class="text-center py-4 text-muted small bg-light rounded-3 border border-dashed">
+                No transaction data found for this cycle.
+              </div>
+              {% endfor %}
+              </div>
+    <div class="col-md-5">
+                <div class="card p-4  border-0 shadow-sm rounded-4 bg-white d-flex flex-column justify-content-between" style="height: 300px !important;">
+                  
+                  <div>
+                    <h5 class="fw-bold text-dark" style="font-size: 18px;">Expenses by Category</h5>
+                    
+                    <div class="row align-items-center g-4">
+                      <div class="col-sm-5 d-flex justify-content-center position-relative">
+                        <div  class="position-relative">
+                          <canvas id="categoryPieChart" style="height: 210px"></canvas>
+                          <div class="position-absolute top-50 start-50 translate-middle text-center w-100">
+                                <strong style="font-size: 14px; display: block; line-height: 2;">₹ {{ totalexpanseamount|default:"0" }}</strong>
+                                <small class="text-muted" style="font-size: 10px;">Total</small>
+                        </div>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-7">
+                        <div class="d-flex flex-column gap-2" style="font-size: 13px;">
+                          {% for item in category_data %}
+                          <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-2">
+                              <span class="rounded-circle" style="width: 10px; height: 10px; background-color: 
+                                {% if forloop.counter == 1 %}#22c55e
+                                {% elif forloop.counter == 2 %}#3b82f6
+                                {% elif forloop.counter == 3 %}#eab308
+                                {% elif forloop.counter == 4 %}#a855f7
+                                {% elif forloop.counter == 5 %}#f97316
+                                {% else %}#6b7280{% endif %}; display: inline-block;">
+                              </span>
+                              <span class="text-secondary">{{ item.category }}</span>
+                            </div>
+                            <div>
+                              <strong class="text-dark">₹ {{ item.total }}</strong> 
+                              
+                            </div>
+                          </div>
+                          {% empty %}
+                          <div class="text-muted text-center" style="font-size: 12px;">No data available</div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+                        </div>
+              <div class="mt-2 mx-2">
+
+                <div class="col-md-12">
+                  <div class="card p-4 h-100 border-0 shadow-sm rounded-4 bg-white" style="min-height: 400px;">
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <div>
+                        <h5 class="fw-bold mb-0 text-dark" style="font-size: 18px;">Expense Trend <span class="text-muted fw-normal" style="font-size: 14px;">(This Month)</span></h5>
+                      </div>
+                    
+                    </div>
+
+      <div class="position-relative my-4 flex-grow-1 d-flex flex-column justify-content-center align-items-center rounded-3" style="background: linear-gradient(180deg, #fdfdfd 0%, #f8f9fa 100%); min-height: 180px; border: 1px dashed #ced4da;">
+ <canvas id="linegraph"></canvas>
+
+      </div>
+
+      <div class="row g-2 pt-3 border-top" style="border-color: #f1f3f5 !important;">
+        <div class="col-md-6 border-end" style="border-color: #f1f3f5 !important;">
+          <small class="text-muted d-block" style="font-size: 11px;">Highest Day</small>
+          <div class="d-flex align-items-center gap-2 mt-1">
+            <strong class="text-dark" style="font-size: 16px;">₹ {{ highest_amount }}</strong>
+            <i class="fa-solid fa-arrow-trend-up text-success" style="font-size: 12px;"></i>
+          </div>
+          <small class="text-muted" style="font-size: 10px;">{{ highest_day }}</small>
+        </div>
+        
+        <div class="col-md-6 border-end" style="border-color: #f1f3f5 !important;">
+          <small class="text-muted d-block" style="font-size: 11px;">Lowest Day</small>
+          <div class="d-flex align-items-center gap-2 mt-1">
+            <strong class="text-dark" style="font-size: 16px;">₹ {{ lowest_amount }}</strong>
+            <i class="fa-solid fa-arrow-trend-down text-danger" style="font-size: 12px;"></i>
+          </div>
+          <small class="text-muted" style="font-size: 10px;">{{ lowest_day }}</small>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+</div>
+        </div>
+      
+      </div>
+    </div>
+
+
+    <script>
+  
+const ctx = document.getElementById('linegraph').getContext('2d');
+
+
+const x = {{ graph_labels|safe }}; 
+const y = {{ graph_data|safe }};   
+
+const myChart = new Chart(ctx, {
+    type: "line",
+    data: {
+        labels: x, 
+        datasets: [{
+            label: "Monthly Expenses", 
+            data: y,
+            borderColor: 'rgb(20, 159, 70)', 
+            backgroundColor: 'rgba(226, 242, 229, 0.3)', 
+            borderWidth: 2,
+            tension: 0,
+            fill: true            
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animations: {
+            y: {
+                type: 'number',
+                duration: 2000,
+                easing: 'easeInOutQuart',
+                from: (ctx) => ctx.chart.scales.y.getPixelForValue(0)
+              }
+            },
+       
+        scales: {
+            x: {
+                grid: {
+                    display: false 
+                }
+            },
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            }
+        }
+    }
+});;
+
+
+  const pieLabelsData = {{ pie_labels|safe }};
+  const pieSpendingData = {{ pie_data|safe }};
+  const pieCtx = document.getElementById('categoryPieChart').getContext('2d');
+  
+const piectx = new Chart(pieCtx, {
+    type: 'doughnut',
+    data: {
+      labels: pieLabelsData,
+      datasets: [{
+        data: pieSpendingData,
+        backgroundColor: ['#22c55e', '#3b82f6', '#eab308', '#a855f7', '#f97316', '#6b7280'],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '80%',
+ 
+      animation: {
+        duration: 2000,
+        easing: 'easeInOutQuart'
+      },
+      
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#021a10',
+          callbacks: {
+            label: function(context) {
+              return ' ' + context.label + ': ₹' + context.raw;
+            }
+          }
+        }
+      } // 🎯 FIXED: Properly closed the plugins block here
+    }
+});
+    </script>
+  </body>
+</html>

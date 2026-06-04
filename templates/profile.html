@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+    {% load humanize %}
+
+{% bootstrap_javascript %}
+    <title>Profile</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{% static 'image/favicon.png' %}">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+       <div class="main">
+
+        <div class="left">
+          <div class="sideicon">
+            <div class="mainicon">
+                <i class="fa-solid fa-wallet" style="color: rgb(16, 131, 83);"></i>
+            </div>
+            <div class="maintagline">
+                <h2 style="font-size: 20px;">Expense Flow</h2>
+                <h4 style="font-size: 14px;">Tracker</h4>
+            </div>
+            </div>
+
+
+            <div class="menu">
+              <a href="{% url 'home' %}">  <i class="fa-solid fa-border-all" style="color: rgb(255, 255, 255);"></i> <span>Dashboard</span></a>
+            </div>
+               <div class="menu">
+               <a href="{% url 'addtransaction' %}"> <i class="fa-solid fa-plus" style="color: rgb(255, 255, 255);"></i> <span>Add Expanses</span></a>
+            </div>
+               <div class="menu">
+            <a href="{% url 'Montlytracaction' %}"> <i class="fa-solid fa-list-ul" style="color: rgb(255, 255, 255);"></i> <Span>Monthly Expanses</Span></a>
+            </div>
+               <div class="menu">
+                <a href="{% url 'profile' %}"> <i class="fa-solid fa-chart-pie" style="color: rgb(255, 255, 255);"></i> <span>Profile</span></a>
+            </div>
+        </div>
+        
+         <div class="right">
+            <div class="tagline">
+            <div class="tag">
+                <h1 style="font-weight: bold;">Daily Expanse <a style="color: #01d591; font-weight: bold;">Profile</a> </h1>
+            <h4 style="font-size: 20px; font-weight: bold; margin-top: 5px;">Stay on Track. Spend Smart. Save Better.</h4>
+            </div>
+                    <div class="dates d-flex bg-white">
+            <div class="dateicon">
+              <i
+                class="fa-regular fa-calendar-days"
+                style="color: rgb(16, 131, 83); font-size: 25px"
+              ></i>
+            </div>
+            <div
+              class="profile-container"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                background: #ffffff;
+                padding: 10px 20px;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+              "
+            >
+              <div class="user-details" style="text-align: right">
+  
+                <h4
+                  style="
+                    margin: 0;
+                    color: #1a1a1a;
+                    font-size: 14px;
+                    font-weight: 600;
+                  "
+                >
+                  Welcome, {{user.name}}
+                </h4>
+                <span
+                  style="
+                    color: #666;
+                    font-size: 12px;
+                    display: block;
+                    margin-top: 2px;
+                  "
+                  >{{current | date:"l d F Y"}}</span
+                >
+            </div>
+            
+            <div
+            class="profile-avatar"
+            style="
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #e0f2fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #004d40;
+            "
+            >
+            <span style="color: #004d40; font-weight: bold; font-size: 20px"
+            >{{user.name|slice:":1"|upper}}</span
+            >
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+            <div class="mainbody">
+                <div class="row mx-4 mt-4">
+    <div class="col-md-8">
+
+    <div class="card p-4 mb-4">
+
+        <h5 class="mb-3">
+            Profile Information
+        </h5>
+
+        <p style="color: gray;">
+            Update your personal details
+        </p>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                <!-- Name -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="mb-1">
+                        Full Name
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           name="name"
+                           placeholder="Enter name">
+
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="mb-1">
+                        Email
+                    </label>
+
+                    <input type="email"
+                           class="form-control"
+                           name="email"
+                           placeholder="Enter email">
+
+                </div>
+
+                <!-- Salary -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="mb-1">
+                        Monthly Salary
+                    </label>
+
+                    <input type="number"
+                           class="form-control"
+                           name="salary"
+                           placeholder="₹ Enter salary">
+
+                </div>
+
+                <!-- Date -->
+                <div class="col-md-6 mb-3">
+
+                    <label class="mb-1">
+                        Date
+                    </label>
+
+                    <input type="date"
+                           class="form-control"
+                           name="date">
+
+                </div>
+
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="d-flex justify-content-end gap-2 mt-3">
+
+                <button type="reset"
+                        class="btn btn-outline-secondary">
+
+                    Cancel
+
+                </button>
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+<div class="col-md-4">
+
+    <div class="card p-4 text-center shadow border-0 rounded-4">
+
+        <div class="mb-3">
+
+            <i class="fa-solid fa-user-circle"
+               style="font-size: 70px; color:#01d591;">
+            </i>
+
+        </div>
+
+        <h5>{{user.name}}</h5>
+
+        <p style="color: gray;">
+            Expense Tracker User
+        </p>
+
+        <hr>
+
+        <div class="d-flex justify-content-between">
+
+            <span>Total Expenses</span>
+
+            <span>
+                ₹ {{ texpanses |intcomma }}
+            </span>
+
+        </div>
+
+        <div class="d-flex justify-content-between mt-2">
+
+            <span>Total Income</span>
+
+            <span>
+                ₹ {{ tincome |intcomma }}
+            </span>
+
+        </div>
+
+        <div class="d-flex justify-content-between mt-2">
+
+            <span>Total Transactions</span>
+
+            <span>{{ total}}</span>
+
+        </div>
+
+    </div>
+
+</div>
+           
+</body>
+</html>

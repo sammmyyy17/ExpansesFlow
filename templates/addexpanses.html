@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %} {% load django_bootstrap5 %} {% bootstrap_css %} 
+    {% bootstrap_javascript %}
+    {% load humanize %}
+    <title>Add Transactions</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'image/favicon.png' %}">
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="left">
+        <div class="sideicon">
+          <div class="mainicon">
+            <i class="fa-solid fa-wallet" style="color: rgb(16, 131, 83)"></i>
+          </div>
+          <div class="maintagline">
+            <h2 style="font-size: 20px">Expense Flow</h2>
+            <h4 style="font-size: 14px">Tracker</h4>
+          </div>
+        </div>
+
+        <div class="menu">
+          <a href="{% url 'home' %}">
+            <i
+              class="fa-solid fa-border-all"
+              style="color: rgb(255, 255, 255)"
+            ></i>
+            <span>Dashboard</span></a
+          >
+        </div>
+        <div class="menu">
+          <a href="{% url 'addtransaction' %}">
+            <i class="fa-solid fa-plus" style="color: rgb(255, 255, 255)"></i>
+            <span>Add Expanses</span></a
+          >
+        </div>
+        <div class="menu">
+          <a href="{% url 'Montlytracaction' %}">
+            <i
+              class="fa-solid fa-list-ul"
+              style="color: rgb(255, 255, 255)"
+            ></i>
+            <span>Monthly Expanses</span></a
+          >
+        </div>
+        <div class="menu">
+          <a href="{% url 'profile' %}">
+            <i
+              class="fa-solid fa-chart-pie"
+              style="color: rgb(255, 255, 255)"
+            ></i>
+            <span>Profile</span></a
+          >
+        </div>
+      </div>
+
+
+
+      <div class="right">
+        <div class="tagline">
+          <div class="tag">
+            <h1 style="font-weight: bold">
+              Daily Spend &
+              <a style="color: #01d591; font-weight: bold">Live Expenses</a>
+            </h1>
+            <h4 style="font-size: 20px; font-weight: bold; margin-top: 5px">
+              Log Today, Secure Tomorrow
+            </h4>
+          </div>
+                   <div class="dates d-flex bg-white">
+            <div class="dateicon">
+              <i
+                class="fa-regular fa-calendar-days"
+                style="color: rgb(16, 131, 83); font-size: 25px"
+              ></i>
+            </div>
+            <div
+              class="profile-container"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                background: #ffffff;
+                padding: 10px 20px;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+              "
+            >
+              <div class="user-details" style="text-align: right">
+                {% for i in user%}
+                <h4
+                  style="
+                    margin: 0;
+                    color: #1a1a1a;
+                    font-size: 14px;
+                    font-weight: 600;
+                  "
+                >
+                  Welcome, {{i.name}}
+                </h4>
+                <span
+                  style="
+                    color: #666;
+                    font-size: 12px;
+                    display: block;
+                    margin-top: 2px;
+                  "
+                  >{{current | date:"l d F Y"}}</span
+                >
+            </div>
+            
+            <div
+            class="profile-avatar"
+            style="
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #e0f2fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #004d40;
+            "
+            >
+            <span style="color: #004d40; font-weight: bold; font-size: 20px"
+            >{{i.name|slice:":1"|upper}}</span
+            >
+            {% endfor %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="mainbody">
+          <div class="extra d-flex justify-content-between p-4">
+            <div class="texttransction">
+              <span>Transactions</span><br />
+              <span>Add View and Manage your income and expanses</span>
+            </div>
+
+            <div class="d-flex gap-2">
+              <!-- EXPENSE BUTTON -->
+              <button
+                class="btn btn-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#expenseModal"
+                name="transaction_type"
+                value="expanses"
+              >
+                + Add Expense
+              </button>
+
+              <!-- INCOME BUTTON -->
+              <button
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#incomeModal"
+                name="transaction_type"
+                value="income"
+              >
+                + Add Income
+              </button>
+            </div>
+
+            <!-- ===================================== -->
+            <!-- EXPENSE MODAL -->
+            <!-- ===================================== -->
+
+            <div class="modal fade" id="expenseModal" tabindex="-1">
+              <div class="modal-dialog modal-dialog-centered">
+                <div
+                  class="modal-content border-0 shadow"
+                  style="border-radius: 15px"
+                >
+                  <div class="modal-header border-0">
+                    <h4 class="fw-bold text-danger">Add Expense</h4>
+
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <form method="post">
+                      {% csrf_token %}
+                      <!-- Expense Name -->
+                      <div class="mb-3">
+                        <label class="form-label"> Expense Name </label>
+                        <input
+                          type="hidden"
+                          name="transaction_type"
+                          value="expanses"
+                        />
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Food, Petrol"
+                          name="title"
+                          required
+                        />
+                      </div>
+
+                      <!-- Category -->
+                      <div class="mb-3">
+                        <label class="form-label"> Category </label>
+
+                        <select class="form-select" name="category" required>
+                          <option value="" selected disabled>Select Category</option>
+
+                          <option value="Food">Food</option>
+                          <option value="Travel">Travel</option>
+                          <option value="Bills">Bills</option>
+                          <option value="Shopping">Shopping</option>
+                          <option value="Medical">Medical</option>
+                          <option value="Recharge">Recharge</option>
+                          <option value="Loan Given">Loan Given</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    <div class="mb-3">
+                        <label class="form-label d-block">Payment Mode</label>
+                        
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="mode" value="Cash"  required >
+                          <label class="form-check-label" for="modeCash">Cash</label>
+                        </div>
+                        
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="mode" value="Bank"  required>
+                          <label class="form-check-label" for="modeBank">Bank</label>
+                        </div>
+                      </div>
+                      <!-- Amount -->
+                      <div class="mb-3">
+                        <label class="form-label"> Amount </label>
+
+                        <input
+                          type="number"
+                          class="form-control"
+                          name="amount"
+                           required
+                        />
+                      </div>
+
+                      <!-- Date -->
+                      <div class="mb-3">
+                        <label class="form-label"> Date </label>
+
+                        <input type="date" class="form-control" name="date" max="{{ current|date:'Y-m-d' }}"  required/>
+                      </div>
+
+                      <!-- Note -->
+                      <div class="mb-3">
+                        <label class="form-label"> Note </label>
+
+                        <textarea
+                          class="form-control"
+                          rows="2"
+                          name="note"
+                        ></textarea>
+                      </div>
+
+                      <button class="btn btn-danger w-100">Save Expense</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===================================== -->
+            <!-- INCOME MODAL -->
+            <!-- ===================================== -->
+
+            <div class="modal fade" id="incomeModal" tabindex="-1">
+              <div class="modal-dialog modal-dialog-centered">
+                <div
+                  class="modal-content border-0 shadow"
+                  style="border-radius: 15px"
+                >
+                  <div class="modal-header border-0">
+                    <h4 class="fw-bold text-success">Add Income</h4>
+
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <form method="post">
+                      {% csrf_token %}
+                      <input
+                        type="hidden"
+                        name="transaction_type"
+                        value="income"
+                      />
+                      <!-- Income Source -->
+                      <div class="mb-3">
+                        <label class="form-label"> Income Source </label>
+
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Salary, Freelance"
+                          name="title"
+                        />
+
+                      </div>
+
+                      <!-- Category -->
+                      <div class="mb-3">
+                        <label class="form-label"> Category </label>
+
+                        <select class="form-select" name="category">
+                          <option selected disabled>Select Category</option>
+
+                          <option>Salary</option>
+                          <option>Business</option>
+                          <option>Bonus</option>
+                          <option>Investment</option>
+                          <option>Gift</option>
+                          <option>Loan Taken</option>
+                          <option>Other</option>
+                        </select>
+                      </div>
+                    <div class="mb-3">
+                        <label class="form-label d-block">Payment Mode</label>
+                        
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="mode" value="Cash" >
+                          <label class="form-check-label" for="modeCash">Cash</label>
+                        </div>
+                        
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="mode" value="Bank" >
+                          <label class="form-check-label" for="modeBank">Bank</label>
+                        </div>
+                      </div>
+                      <!-- Amount -->
+                      <div class="mb-3">
+                        <label class="form-label"> Amount </label>
+
+                        <input type="number" class="form-control" name="amount" />
+                      </div>
+
+                      <!-- Date -->
+                      <div class="mb-3">
+                        <label class="form-label"> Date </label>
+
+                        <input type="date" class="form-control" name="date" max="{{ current|date:'Y-m-d' }}" />
+                      </div>
+
+                      <!-- Note -->
+                      <div class="mb-3">
+                        <label class="form-label"> Note </label>
+
+                        <textarea class="form-control" rows="2" name="note"></textarea>
+                      </div>
+
+                      <button type="submit" class="btn btn-success w-100">
+                        Save Income
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="box1 d-flex">
+              <div class="boxicon">
+                <i class="fa-solid fa-arrow-trend-down"style="color: rgb(16, 131, 83); font-size: 40px"></i>
+              </div>
+              <div class="boxtext">
+                <span>Today`s Expenses</span> <br />
+                <b><span style="font-size: 20px">₹ {{tamount|intcomma}}</span></b> <br />
+                <span style="font-size: 14px; color: #5e8277"
+                  >{{ec}} Transactions
+                </span>
+              </div>
+            </div>
+
+            <div class="box2 d-flex">
+              <div class="boxicon">
+          
+                <i class="fa-solid fa-arrow-trend-up"  style="color: #1e6cca; font-size: 40px"></i>
+              </div>
+              <div class="boxtext">
+                <span style="color: #1e6cca">Today Income</span><br />
+                <span style="font-size: 20px; font-weight: bold; color: #1e6cca"
+                  >₹ {{iamount|intcomma}}</span
+                ><br />
+                <span style="font-size: 14px; color: #616a67">{{ic}} Transactions </span>
+              </div>
+            </div>
+            <div class="box3 d-flex">
+              <div class="boxicon">
+                <i class="fa-solid fa-coins" style="color: rgb(155, 63, 249); font-size:40px;"></i>
+              </div>
+              <div class="boxtext">
+                <span style="color: #9260f8">Expanses Cash </span><br />
+                <span style="font-size: 20px; font-weight: bold; color: #9260f8"
+                  >₹ {{cash}}</span
+                ><br />
+              <span style="font-size: 14px; color: #616a67">{{cashc}} Transactions </span>
+
+              </div>
+            </div>
+            <div class="box4 d-flex">
+              <div class="boxicon">
+      
+                <i class="fa-solid fa-building-columns" style="color: rgb(252, 160, 53); font-size: 40px"></i>
+              </div>
+              <div class="boxtext">
+                <span style="color: #fca035">Expanse Bank</span><br />
+                <span style="font-size: 20px; font-weight: bold; color: #fca035"
+                  >₹{{bank}} </span
+                ><br />
+                <span style="font-size: 14px; color: #616a67"
+                  >{{bankc}} Transactions 
+                </span>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="filtter d-flex justify-content-between mt-4 px-3">
+            <form method="get">
+            <div class="table_filtter d-flex justify-content-between">
+              <a href="?">All Transactions</a>
+              <a href="?type=expanses">Expanses</a>
+              <a href="?type=income">Income</a>
+            </div>
+          </form>
+          </div>
+<!-- ===================================== -->
+<!-- TRANSACTION TABLE -->
+<!-- ===================================== -->
+
+<div class="table-container mt-4 mx-2">
+
+    <table class="table table-hover align-middle ">
+
+        <thead class="table-light">
+
+            <tr>
+
+                <th>DATE</th>
+                <th>DESCRIPTION</th>
+                <th>CATEGORY</th>
+                <th>TYPE</th>
+                <th>MODE</th>
+                <th>AMOUNT</th>
+                <th>ACTIONS</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for i in data %}
+
+            <tr>
+
+                <!-- DATE -->
+
+                <td>
+
+                    {{ i.date }}
+
+                </td>
+
+                <!-- DESCRIPTION -->
+
+                <td>
+
+                    <b>{{ i.title |capfirst }}</b>
+
+                    <br>
+
+                    <small class="text-muted">
+
+                        {{ i.note |capfirst}}
+
+                    </small>
+
+                </td>
+
+                <!-- CATEGORY -->
+
+                <td>
+
+                    {% if i.transaction_type == "expanses" %}
+
+                    <span style="border-radius: 50px; background-color: #ffebee; color: #c62828; padding: 6px 12px; font-weight: 600;">
+
+                        {{ i.category }}
+
+                    </span>
+
+                    {% else %}
+
+                    <span style="border-radius: 50px; background-color: #e8f5e9; color: #2e7d32; padding: 6px 12px; font-weight: 600;" >
+
+                        {{ i.category }}
+
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+                <!-- TYPE -->
+
+                <td>
+
+                    {% if i.transaction_type == "expanses" %}
+
+                    <span class="text-danger fw-bold">
+
+                        ↓ Expense
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="text-success fw-bold">
+
+                        ↑ Income
+
+                    </span>
+
+                    {% endif %}
+
+                </td>
+                 <!-- Mode -->
+                <td style="font-size: 22px;">
+
+                  {% if i.mode == 'Bank' %}
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle ">Bank</span>
+                {% elif i.mode == 'Cash' %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle">Cash</span>
+                {% else %}
+                    <span class="badge bg-secondary-subtle text-secondary">{{ i.mode }}</span>
+                {% endif %}
+
+                </td>
+                <!-- AMOUNT -->
+
+                <td>
+
+                    {% if i.transaction_type == "expanses" %}
+
+                    <span class="text-danger fw-bold">
+
+                        - ₹{{ i.amount|intcomma }}
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="text-success fw-bold">
+
+                        + ₹{{ i.amount|intcomma }}
+
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+                <!-- ACTION BUTTONS -->
+
+                <td>
+
+                    <div class="d-flex gap-2">
+
+                        <!-- EDIT BUTTON -->
+
+                        <button type="button"
+                                class="btn btn-success btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal{{ i.id }}"
+                                style="background: transparent; border: none; padding: 6px; cursor: pointer; border-radius: 6px; transition: 0.2s;" 
+        onmouseover="this.style.background='#e8f5e9'" onmouseout="this.style.background='transparent'">
+
+                            <i i class="fas fa-edit" style="color: #2e7d32; font-size: 16px;"></i>
+
+                        </button>
+
+                        <!-- DELETE BUTTON -->
+
+                        <a href="{% url 'delete_data' i.id %}"
+                           class="btn btn-danger btn-sm"
+                          onclick="return confirm('⚠️ Delete this item permanently? \nClick OK to confirm.');"> 
+                            <i class="fa-solid fa-trash"></i>
+
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+<!-- ===================================== -->
+<!-- EDIT MODALS -->
+<!-- ===================================== -->
+
+{% for i in data %}
+
+<div class="modal fade"
+     id="editModal{{ i.id }}"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow rounded-4">
+
+            <!-- MODAL HEADER -->
+
+            <div class="modal-header border-0">
+
+                <div>
+
+                    <h4 class="fw-bold mb-0">
+
+                        Edit Transaction
+
+                    </h4>
+
+                    <small class="text-muted">
+
+                        Update your transaction details
+
+                    </small>
+
+                </div>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+
+                </button>
+
+            </div>
+
+            <!-- MODAL BODY -->
+
+            <div class="modal-body">
+
+                <form method="post"
+                      action="{% url 'edit_data' i.id %}">
+
+                    {% csrf_token %}
+
+                    <!-- TRANSACTION TYPE -->
+
+                 <div class="mb-3">
+
+          <label class="form-label fw-semibold">
+              Transaction Type
+          </label>
+
+          <select name="transaction_type"
+                  class="form-select">
+
+              <option value="expanses"
+              {% if i.transaction_type == "expanses" %}
+              selected
+              {% endif %}>
+                  Expense
+              </option>
+
+              <option value="income"
+              {% if i.transaction_type == "income" %}
+              selected
+              {% endif %}>
+                  Income
+              </option>
+
+          </select>
+
+      </div>
+
+                    <!-- TITLE -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Title
+
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="title"
+                               value="{{ i.title }}">
+
+                    </div>
+
+                    <!-- CATEGORY -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Category
+
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="category"
+                               value="{{ i.category }}">
+
+                    </div>
+       <div class="mb-3">
+    <label class="form-label d-block fw-semibold">Payment Mode</label>
+    
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" 
+                    type="radio" 
+                    name="mode" 
+                    value="Cash" 
+                    id="editModeCash"
+                    {% if i.mode == 'Cash' %}checked{% endif %}>
+              <label class="form-check-label" >Cash</label>
+            </div>
+            
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" 
+                    type="radio" 
+                    name="mode" 
+                    value="Bank" 
+                    id="editModeBank"
+                    {% if i.mode == 'Bank' %}checked{% endif %}>
+              <label class="form-check-label">Bank</label>
+            </div>
+        </div>
+                    <!-- AMOUNT -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Amount
+
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               name="amount"
+                               value="{{ i.amount }}">
+
+                    </div>
+
+                    <!-- DATE -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Date
+
+                        </label>
+
+                        <input type="date"
+                               class="form-control"
+                               name="date"
+                               value="{{ i.date|date:'Y-m-d' }}">
+
+                    </div>
+
+                    <!-- NOTE -->
+
+                    <div class="mb-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Note
+
+                        </label>
+
+                        <textarea class="form-control"
+                                  rows="3"
+                                  name="note">{{ i.note }}</textarea>
+
+                    </div>
+
+                    <!-- BUTTONS -->
+
+                    <div class="d-flex gap-2">
+
+                        <button type="button"
+                                class="btn btn-light border w-50"
+                                data-bs-dismiss="modal">
+
+                            Cancel
+
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-primary w-50">
+
+                            Update Transaction
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+
+          
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

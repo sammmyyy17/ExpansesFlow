@@ -1,0 +1,17 @@
+{
+    "name": "Expense Flow Tracker",
+    "short_name": "ExpenseFlow",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#021a10",
+    "theme_color": "#021a10",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/static/image/favicon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
