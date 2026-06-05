@@ -347,3 +347,190 @@ small {
   border-radius: 4px;
   display: inline-block;
 }
+
+
+/* This query activates only on mobile screens (768px wide or smaller) */
+@media screen and (max-width: 768px) {
+    
+    /* 1. Reset the layout from columns to a clean vertical stack */
+    .container, .main-wrapper, .dashboard-layout {
+        display: flex;
+        flex-direction: column;
+        padding: 10px !important;
+    }
+
+    /* 2. Transform the Left Sidebar into a Top Navbar or clean menu */
+    aside, .sidebar {
+        width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+        padding: 15px 10px !important;
+        margin-bottom: 15px;
+    }
+
+    /* Move sidebar links into a horizontal row for easy thumb-tapping */
+    .sidebar nav, .sidebar-menu {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: space-around;
+    }
+
+    .sidebar a, .menu-item {
+        padding: 10px 12    px !important;
+        font-size: 14px !important;
+        text-align: center;
+        flex: 1; /* Makes buttons equal size across the screen width */
+        min-width: 100px;
+    }
+
+    /* 3. Make main data containers consume full phone screen width */
+    main, .content-right {
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    /* 4. Force grid cards (Overview, Summary) into a 1-column stack */
+    .grid-3-columns, .card-group, .metrics-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .card, .metric-box {
+        width: 100% !important;
+        margin: 0 0 10px 0 !important;
+    }
+
+    /* 5. Clean up your Heatmap/Calendar grid so it doesn't clip */
+    .heatmap-grid, .calendar-table {
+        font-size: 12px !important; /* Shrinks text slightly for small screens */
+        overflow-x: auto; /* Adds smooth side-scrolling if it's too wide */
+        display: block;
+    }
+
+    /* 6. Make input forms and tables easily scrollable/readable */
+    input, select, textarea, button {
+        width: 100% !important; /* Full-width inputs for easier typing */
+        font-size: 16px !important; /* Prevents iOS/Android from auto-zooming in */
+    }
+    
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto; /* Allows table tracking data to slide side-to-side */
+    }
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+/* ==========================================================================
+   CUSTOM MEDIA QUERY FOR EXPENSE FLOW TRACKER (MOBILE BREAKPOINT)
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+    
+    /* 1. LAYOUT RESET: Change horizontal flex to vertical stack */
+    .main {
+        flex-direction: column !important;
+        height: auto !important; /* Allows the page to scroll down naturally */
+        width: 100% !important;
+    }
+
+    /* 2. SIDEBAR (.left) TO TOP NAVBAR TRANSFORMATION */
+    .left {
+        width: 100% !important;
+        height: auto !important;
+        border-right: none !important;
+        border-bottom: 2px solid #05452d !important;
+        padding-bottom: 20px !important;
+    }
+
+    /* Reduce vertical gap on mobile header */
+    .sideicon {
+        margin-bottom: 20px !important;
+        justify-content: center; /* Centers dashboard title on mobile screens */
+    }
+
+    /* Stack menu buttons side-by-side inside a scrollable or wrapping row */
+    .left .menu {
+        display: inline-flex !important;
+        margin-top: 10px !important;
+        margin-right: 5px !important;
+        padding: 10px 15px !important;
+        font-size: 13px !important;
+    }
+
+    /* 3. CONTENT AREA (.right) CORRECTION */
+    .right {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* 4. MAIN TAGLINE HEADER */
+    .tagline {
+        flex-direction: column !important;
+        gap: 15px !important;
+        text-align: center;
+    }
+
+    .dates {
+        justify-content: center !important;
+        align-self: center !important;
+        width: 100% !important;
+    }
+
+    /* 5. METRIC CARDS OVERVIEW (.box) BLOCK STACKING */
+    .box {
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 10px !important;
+    }
+
+    .box1, .box2, .box3, .box4 {
+        width: 95% !important; /* Cards take full width of mobile display */
+        margin: 8px 0 !important;
+    }
+
+    /* 6. LOWER CONTENT ROWS (.flexbox) STACKING */
+    .flexbox {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 20px !important;
+        margin: 15px 0 !important;
+    }
+
+    /* Recent Transactions Card adjustments */
+    .recentcon {
+        width: 95% !important;
+        margin: 0 auto !important;
+    }
+
+    /* Category Chart Container adjustment */
+    .col-md-5 {
+        width: 95% !important;
+        margin: 0 auto !important;
+    }
+    
+    .col-md-5 .card {
+        height: auto !important; /* Let content breathe vertically */
+    }
+
+    /* Expense Trend Graph Container adjustment */
+    .mt-2.mx-2 {
+        margin: 10px !important;
+    }
+
+    .col-md-12 {
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    /* Ensure chart canvases scale properly within mobile cards */
+    canvas {
+        max-width: 100% !important;
+    }
+}
