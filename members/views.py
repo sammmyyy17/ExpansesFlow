@@ -323,6 +323,7 @@ def exportpdf(request):
     'Sr No',
     'Title',
     'Category',
+    'Mode',
     'Type',
     'Amount',
     'Date'
@@ -333,6 +334,7 @@ def exportpdf(request):
             index,
             i.title,
             i.category,
+            i.mode,
             i.transaction_type,
             f"₹ {i.amount}",
             str(i.date)
@@ -377,6 +379,7 @@ def export_excel(request):
         'Sr No',
         'Title',
         'Category',
+        'Mode',
         'Type',
         'Amount',
         'Date'
@@ -391,6 +394,7 @@ def export_excel(request):
             index,
             i.title,
             i.category,
+            i.mode,
             i.transaction_type,
             float(i.amount),
             str(i.date)
