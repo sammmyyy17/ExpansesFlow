@@ -4,7 +4,14 @@ from django.db.models import Sum, Count
 import calendar
 from datetime import datetime, date
 import json
+from django.http import HttpResponse # for http runing 
+from reportlab.platypus import (SimpleDocTemplate, Table, TableStyle,  Paragraph,Spacer)# for create pdf table text design space 
+from reportlab.lib import colors    # table color
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus.flowables import HRFlowable #for horizontal line
+from reportlab.lib.pagesizes import letter
 
+from openpyxl import Workbook
 current = date.today()
 
 def home(request):
@@ -148,6 +155,7 @@ def addtransaction(request):
         'bank':bank,
         'bankc':bankcount,
         'error': error,
+        "current": current,
     })
 
 
@@ -288,3 +296,116 @@ def delete_data(request, id):
     data = transaction.objects.get(id=id)
     data.delete()
     return redirect('addtransaction')
+def print(request):
+    data = transaction.objects.all()
+    return render(request,'print.html',context={'data': data,"current": current,})
+
+def exportpdf(request):
+    response = HttpResponse(content_type='application/pdf') #this say it is pdf file
+    response['Content-Disposition'] = 'attachment; filename="expense_report.pdf"'
+    
+    doc = SimpleDocTemplate(
+    response,
+    pagesize=letter,
+    rightMargin=20,
+    leftMargin=20,
+    topMargin=20,
+    bottomMargin=20
+)
+    elements=[]
+    styles = getSampleStyleSheet()
+    title = Paragraph("Expense Flow Tracker Report",styles['Title'])
+    elements.append(title)
+    elements.append(Spacer(1, 12))
+    elements.append(HRFlowable())
+    elements.append(Spacer(1, 12))
+    data = [[
+    'Sr No',
+    'Title',
+    'Category',
+    'Type',
+    'Amount',
+    'Date'
+]]
+    queryset = transaction.objects.all()
+    for index, i in enumerate(queryset, start=1):
+        data.append([
+            index,
+            i.title,
+            i.category,
+            i.transaction_type,
+            f"₹ {i.amount}",
+            str(i.date)
+        ])
+    table = Table(data,colWidths=[40,120,100,80,80,90])
+    table.setStyle(TableStyle([
+
+    ('BACKGROUND', (0,0), (-1,0), colors.green),
+
+    ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+
+    ('GRID', (0,0), (-1,-1), 1, colors.black),
+
+    ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+
+    ('BOTTOMPADDING', (0,0), (-1,0), 12),
+
+    ('BACKGROUND', (0,1), (-1,-1), colors.beige),
+
+    ('FONTSIZE', (0,0), (-1,-1), 10),
+
+    ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+
+]))
+    elements.append(table)# BUILD PDF
+    doc.build(elements)
+
+    return response
+def export_excel(request):
+
+    # CREATE WORKBOOK
+    wb = Workbook()
+
+    # ACTIVE SHEET
+    ws = wb.active
+
+    # SHEET TITLE
+    ws.title = "Expense Report"
+
+    # HEADER
+    ws.append([
+        'Sr No',
+        'Title',
+        'Category',
+        'Type',
+        'Amount',
+        'Date'
+    ])
+
+    # DATABASE DATA
+    queryset = transaction.objects.all()
+
+    for index, i in enumerate(queryset, start=1):
+
+        ws.append([
+            index,
+            i.title,
+            i.category,
+            i.transaction_type,
+            float(i.amount),
+            str(i.date)
+        ])
+
+    # RESPONSE
+    response = HttpResponse(
+        content_type='application/ms-excel'
+    )
+
+    response[
+        'Content-Disposition'
+    ] = 'attachment; filename="expense_report.xlsx"'
+
+    # SAVE FILE
+    wb.save(response)
+
+    return response
