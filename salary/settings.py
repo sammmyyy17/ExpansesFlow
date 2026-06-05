@@ -52,10 +52,10 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',  # <-- Check this line!
+    'django.middleware.csrf.CsrfViewMiddleware',  # Ensure it says Csrf, not Cs6rf
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # <-- Check this line!
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Ensure it says django.middleware
 ]
 
 ROOT_URLCONF = 'salary.urls'
@@ -79,9 +79,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'salary.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
     'default': dj_database_url.config(
