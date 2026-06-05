@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% load humanize %}
+
+    <title>Print Statement - Expense Flow</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{% static 'image/favicon.png' %}">
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 15px;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 30px;
+            }
+        }
+
+        .print-container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            padding: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .print-container {
+                padding: 30px;
+            }
+        }
+
+        .table th {
+            background-color: #f8f9fa !important;
+            color: #5e8277 !important;
+            letter-spacing: 0.5px;
+            border: none !important;
+            white-space: nowrap;
+        }
+
+        .table td {
+            border-color: #f1f3f2 !important;
+            vertical-align: middle;
+        }
+
+        .brand-logo-wrapper {
+            max-width: 180px;
+            width: 100%;
+        }
+
+        /* CRITICAL FIXED PRINT RULES */
+        @media print {
+            @page {
+                size: A4 landscape; /* Forces the printer/PDF view to go sideways */
+                margin: 10mm;
+            }
+
+            body {
+                background-color: #fff;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+
+            .container-fluid {
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .print-container {
+                box-shadow: none !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+
+            /* Prevent table parent wrapper from clipping the content */
+            .table-responsive {
+                overflow: visible !important;
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .table {
+                width: 100% !important;
+                table-layout: auto !important;
+            }
+
+            /* Scale down fonts only on physical printouts so it completely fits */
+            .table th {
+                font-size: 12px !important;
+                padding: 8px 4px !important;
+            }
+
+            .table td {
+                font-size: 13px !important;
+                padding: 8px 4px !important;
+            }
+
+            .table td .fs-6 {
+                font-size: 13px !important;
+            }
+
+            .badge {
+                font-size: 11px !important;
+                padding: 4px 8px !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border: 1px solid #ddd !important;
+            }
+
+            th {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body onload="window.print()">
+
+<div class="container-fluid max-width-lg">
+    
+    <div class="row align-items-center mb-4 border-bottom pb-3 g-3">
+        <div class="col-12 col-sm-6 text-center text-sm-start">
+            <div class="brand-logo-wrapper mx-auto mx-sm-0">
+                <img src="{% static 'image/favicont.png' %}" alt="Logo" class="img-fluid d-block" style="object-fit: contain;">
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 text-center text-sm-end">
+            <p class="text-secondary mb-0 fs-5">
+                <i class="fa-regular fa-calendar-days me-1" style="color: rgb(16, 131, 83);"></i> 
+                Generated Statement: <span class="fw-medium text-dark">{{ current|date:"F Y" }}</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="print-container" id="print-table-zone">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 w-100">
+                <thead>
+                    <tr class="text-secondary small fw-bold text-uppercase">
+                        <th scope="col" class="py-3 ps-3" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px; width: 12%;">Date</th>
+                        <th scope="col" class="py-3" style="width: 32%;">Description</th>
+                        <th scope="col" class="py-3 text-center" style="width: 15%;">Category</th>
+                        <th scope="col" class="py-3" style="width: 13%;">Type</th>
+                        <th scope="col" class="py-3 text-center" style="width: 10%;">Mode</th>
+                        <th scope="col" class="py-3 text-end" style="border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 15%;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td class="py-3 ps-3 text-secondary small fw-medium">
+                            {{ i.date|date:"d M Y" }}
+                        </td>
+
+                        <td class="py-3">
+                            <div class="fw-bold text-dark mb-0 fs-6">{{ i.title|capfirst }}</div>
+                            {% if i.note %}
+                            <small class="text-muted d-block mt-0.5 small">{{ i.note|capfirst }}</small>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-3 text-center">
+                            {% if i.transaction_type == "expanses" %}
+                            <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background-color: #ffebee; color: #c62828; font-size: 13px;">
+                                {{ i.category }}
+                            </span>
+                            {% else %}
+                            <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background-color: #e8f5e9; color: #2e7d32; font-size: 13px;">
+                                {{ i.category }}
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-3">
+                            {% if i.transaction_type == "expanses" %}
+                            <span class="text-danger fw-bold small">
+                                <i class="fa-solid fa-circle-arrow-down me-1"></i>Expense
+                            </span>
+                            {% else %}
+                            <span class="text-success fw-bold small">
+                                <i class="fa-solid fa-circle-arrow-up me-1"></i>Income
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-3 text-center">
+                            {% if i.mode == 'Bank' %}
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1.5 fw-semibold" style="font-size: 12px;">Bank</span>
+                            {% elif i.mode == 'Cash' %}
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1.5 fw-semibold" style="font-size: 12px;">Cash</span>
+                            {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary px-2 py-1.5 fw-semibold" style="font-size: 12px;">{{ i.mode }}</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-3 text-end fw-bold fs-6">
+                            {% if i.transaction_type == "expanses" %}
+                            <span class="text-danger">
+                                - ₹{{ i.amount|intcomma }}
+                            </span>
+                            {% else %}
+                            <span class="text-success">
+                                + ₹{{ i.amount|intcomma }}
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="fa-regular fa-folder-open d-block mb-2 fs-3 text-secondary"></i>
+                            No data items registered for this timeline query.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
