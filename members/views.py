@@ -191,9 +191,9 @@ def Montlytracaction(request):
     monthly_total_income = monthlyincome.aggregate(Sum('amount'))['amount__sum'] or 0
    
     userdata = user.objects.first()
-    print(userdata.salary)
     if userdata and userdata.salary:
-        budget_limit = int(int(userdata.salary)*0.21)
+        print(userdata.salary)  # Safe to print now!
+        budget_limit = int(int(userdata.salary) * 0.21)
     else:
         budget_limit = 4000
 
