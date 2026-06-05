@@ -298,7 +298,7 @@ def delete_data(request, id):
     return redirect('addtransaction')
     
 def print_transactions(request):
-    data = transaction.objects.all()
+    data = transaction.objects.all().order_by('-date')
     return render(request,'print.html',context={'data': data})
 
 def exportpdf(request):
