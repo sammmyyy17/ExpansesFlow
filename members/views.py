@@ -296,9 +296,10 @@ def delete_data(request, id):
     data = transaction.objects.get(id=id)
     data.delete()
     return redirect('addtransaction')
+    
 def print(request):
     data = transaction.objects.all()
-    return render(request,'print.html',context={'data': data,"current": current,})
+    return render(request,'print.html',context={'data': data})
 
 def exportpdf(request):
     response = HttpResponse(content_type='application/pdf') #this say it is pdf file
