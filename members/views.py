@@ -297,7 +297,7 @@ def delete_data(request, id):
     data.delete()
     return redirect('addtransaction')
     
-def print(request):
+def print_transactions(request):
     data = transaction.objects.all()
     return render(request,'print.html',context={'data': data})
 
