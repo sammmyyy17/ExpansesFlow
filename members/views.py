@@ -274,6 +274,7 @@ def edit_data(request, id):
     if request.method == 'POST':
         data.title = request.POST.get('title')
         data.category = request.POST.get('category')
+        data.mode=request.POST.get('mode')
         data.amount = request.POST.get('amount')
         data.date = request.POST.get('date')
         data.note = request.POST.get('note')
