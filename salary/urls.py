@@ -16,9 +16,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.http import JsonResponse  # <-- 1. Added this import
+
+# 2. Added this function to output the exact JSON format Chrome wants
+def manifest_view(request):
+    data = {
+        "short_name": "ExpenseFlow",
+        "name": "Expense Flow Tracker",
+        "icons": [
+            {
+                "src": "https://expansesflow.onrender.com/static/images/logo.png",
+                "type": "image/png",
+                "sizes": "192x192"
+            },
+            {
+                "src": "https://expansesflow.onrender.com/static/images/logo.png",
+                "type": "image/png",
+                "sizes": "512x512"
+            }
+        ],
+        "start_url": "/",
+        "background_color": "#002119",
+        "display": "standalone",
+        "theme_color": "#002119"
+    }
+    return JsonResponse(data)
 
 urlpatterns = [
     path('', include('members.urls')),
+    path('manifest.json', manifest_view),
     path('admin/', admin.site.urls),
     
 ]
