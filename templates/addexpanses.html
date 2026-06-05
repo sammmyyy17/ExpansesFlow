@@ -151,14 +151,14 @@
 
 
 
-        <div class="mainbody">
+        <div class="mainbody container-fluid px-0">
           <div class="extra d-flex justify-content-between p-4">
             <div class="texttransction">
               <span>Transactions</span><br />
               <span>Add View and Manage your income and expanses</span>
             </div>
 
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2 p-3">
               <!-- EXPENSE BUTTON -->
               <button
                 class="btn btn-danger"
@@ -166,7 +166,7 @@
                 data-bs-target="#expenseModal"
                 name="transaction_type"
                 value="expanses"
-              >
+               >
                 + Add Expense
               </button>
 
@@ -447,193 +447,125 @@
             </div>
           </div>
 
-
-          <div class="filtter d-flex justify-content-between mt-4 px-3">
-            <form method="get">
-            <div class="table_filtter d-flex justify-content-between">
-              <a href="?">All Transactions</a>
-              <a href="?type=expanses">Expanses</a>
-              <a href="?type=income">Income</a>
-            </div>
-          </form>
-          </div>
+<div class="filtter d-flex justify-content-between mt-4 px-3">
+  <div class="table_filtter d-flex gap-3">
+    <a href="?" class="text-decoration-none fw-bold {% if not request.GET.type %}text-dark{% else %}text-muted{% endif %}">All Transactions</a>
+    <a href="?type=expanses" class="text-decoration-none fw-bold {% if request.GET.type == 'expanses' %}text-danger{% else %}text-muted{% endif %}">Expenses</a>
+    <a href="?type=income" class="text-decoration-none fw-bold {% if request.GET.type == 'income' %}text-success{% else %}text-muted{% endif %}">Income</a>
+  </div>
+</div>
 <!-- ===================================== -->
 <!-- TRANSACTION TABLE -->
 <!-- ===================================== -->
 
-<div class="table-container mt-4 mx-2">
-
-    <table class="table table-hover align-middle ">
-
-        <thead class="table-light">
-
-            <tr>
-
-                <th>DATE</th>
-                <th>DESCRIPTION</th>
-                <th>CATEGORY</th>
-                <th>TYPE</th>
-                <th>MODE</th>
-                <th>AMOUNT</th>
-                <th>ACTIONS</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-            {% for i in data %}
-
-            <tr>
-
-                <!-- DATE -->
-
-                <td>
-
-                    {{ i.date }}
-
-                </td>
-
-                <!-- DESCRIPTION -->
-
-                <td>
-
-                    <b>{{ i.title |capfirst }}</b>
-
-                    <br>
-
-                    <small class="text-muted">
-
-                        {{ i.note |capfirst}}
-
-                    </small>
-
-                </td>
-
-                <!-- CATEGORY -->
-
-                <td>
-
-                    {% if i.transaction_type == "expanses" %}
-
-                    <span style="border-radius: 50px; background-color: #ffebee; color: #c62828; padding: 6px 12px; font-weight: 600;">
-
-                        {{ i.category }}
-
-                    </span>
-
-                    {% else %}
-
-                    <span style="border-radius: 50px; background-color: #e8f5e9; color: #2e7d32; padding: 6px 12px; font-weight: 600;" >
-
-                        {{ i.category }}
-
-                    </span>
-
-                    {% endif %}
-
-                </td>
-
-                <!-- TYPE -->
-
-                <td>
-
-                    {% if i.transaction_type == "expanses" %}
-
-                    <span class="text-danger fw-bold">
-
-                        ↓ Expense
-
-                    </span>
-
-                    {% else %}
-
-                    <span class="text-success fw-bold">
-
-                        ↑ Income
-
-                    </span>
-
-                    {% endif %}
-
-                </td>
-                 <!-- Mode -->
-                <td style="font-size: 22px;">
-
-                  {% if i.mode == 'Bank' %}
-                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle ">Bank</span>
-                {% elif i.mode == 'Cash' %}
-                    <span class="badge bg-success-subtle text-success border border-success-subtle">Cash</span>
-                {% else %}
-                    <span class="badge bg-secondary-subtle text-secondary">{{ i.mode }}</span>
-                {% endif %}
-
-                </td>
-                <!-- AMOUNT -->
-
-                <td>
-
-                    {% if i.transaction_type == "expanses" %}
-
-                    <span class="text-danger fw-bold">
-
-                        - ₹{{ i.amount|intcomma }}
-
-                    </span>
-
-                    {% else %}
-
-                    <span class="text-success fw-bold">
-
-                        + ₹{{ i.amount|intcomma }}
-
-                    </span>
-
-                    {% endif %}
-
-                </td>
-
-                <!-- ACTION BUTTONS -->
-
-                <td>
-
-                    <div class="d-flex gap-2">
-
-                        <!-- EDIT BUTTON -->
-
-                        <button type="button"
-                                class="btn btn-success btn-sm"
-                                data-bs-toggle="modal"
-                                data-bs-target="#editModal{{ i.id }}"
-                                style="background: transparent; border: none; padding: 6px; cursor: pointer; border-radius: 6px; transition: 0.2s;" 
-        onmouseover="this.style.background='#e8f5e9'" onmouseout="this.style.background='transparent'">
-
-                            <i i class="fas fa-edit" style="color: #2e7d32; font-size: 16px;"></i>
-
-                        </button>
-
-                        <!-- DELETE BUTTON -->
-
-                        <a href="{% url 'delete_data' i.id %}"
-                           class="btn btn-danger btn-sm"
-                          onclick="return confirm('⚠️ Delete this item permanently? \nClick OK to confirm.');"> 
-                            <i class="fa-solid fa-trash"></i>
-
-                        </a>
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </tbody>
-
-    </table>
-
+<div class="card p-4 border-0 shadow-sm rounded-4 bg-white w-100 mt-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 w-100">
+            <thead class="table-light">
+                <tr class="text-secondary small fw-bold text-uppercase border-bottom">
+                    <th scope="col" class="py-3 ps-3" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px; width: 12%;">Date</th>
+                    <th scope="col" class="py-3" style="width: 32%;">Description</th>
+                    <th scope="col" class="py-3 text-center" style="width: 15%;">Category</th>
+                    <th scope="col" class="py-3" style="width: 13%;">Type</th>
+                    <th scope="col" class="py-3 text-center" style="width: 10%;">Mode</th>
+                    <th scope="col" class="py-3 text-end" style="width: 13%;">Amount</th>
+                    <th scope="col" class="py-3 text-center" style="border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: 5%;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data %}
+                <tr class="border-bottom">
+                    <td class="py-3 ps-3 text-secondary small fw-medium">
+                        {{ i.date }}
+                    </td>
+
+                    <td class="py-3">
+                        <div class="fw-bold text-dark fs-6 mb-0">{{ i.title|capfirst }}</div>
+                        {% if i.note %}
+                        <small class="text-muted d-block mt-0.5">{{ i.note|capfirst }}</small>
+                        {% endif %}
+                    </td>
+
+                    <td class="py-3 text-center">
+                        {% if i.transaction_type == "expanses" %}
+                        <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background-color: #ffebee; color: #c62828; font-size: 13px;">
+                            {{ i.category }}
+                        </span>
+                        {% else %}
+                        <span class="badge rounded-pill px-3 py-2 fw-semibold" style="background-color: #e8f5e9; color: #2e7d32; font-size: 13px;">
+                            {{ i.category }}
+                        </span>
+                        {% endif %}
+                    </td>
+
+                    <td class="py-3">
+                        {% if i.transaction_type == "expanses" %}
+                        <span class="text-danger fw-bold small">
+                            <i class="fa-solid fa-arrow-down-long me-1"></i>Expense
+                        </span>
+                        {% else %}
+                        <span class="text-success fw-bold small">
+                            <i class="fa-solid fa-arrow-up-long me-1"></i>Income
+                        </span>
+                        {% endif %}
+                    </td>
+
+                    <td class="py-3 text-center">
+                        {% if i.mode == 'Bank' %}
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1.5 fw-semibold" style="font-size: 12px;">Bank</span>
+                        {% elif i.mode == 'Cash' %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1.5 fw-semibold" style="font-size: 12px;">Cash</span>
+                        {% else %}
+                            <span class="badge bg-secondary-subtle text-secondary px-2 py-1.5 fw-semibold" style="font-size: 12px;">{{ i.mode }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="py-3 text-end fw-bold fs-6">
+                        {% if i.transaction_type == "expanses" %}
+                        <span class="text-danger">
+                            - ₹{{ i.amount|intcomma }}
+                        </span>
+                        {% else %}
+                        <span class="text-success">
+                            + ₹{{ i.amount|intcomma }}
+                        </span>
+                        {% endif %}
+                    </td>
+
+                    <td class="py-3 text-center">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <button type="button"
+                                    class="btn btn-sm p-1 rounded-2"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editModal{{ i.id }}"
+                                    style="background: transparent; border: none; transition: 0.2s;"
+                                    onmouseover="this.style.background='#e8f5e9'" 
+                                    onmouseout="this.style.background='transparent'">
+                                <i class="fas fa-edit" style="color: #2e7d32; font-size: 15px;"></i>
+                            </button>
+
+                            <a href="{% url 'delete_data' i.id %}"
+                               class="btn btn-sm p-1 rounded-2"
+                               style="background: transparent; border: none; transition: 0.2s;"
+                               onmouseover="this.style.background='#ffebee'" 
+                               onmouseout="this.style.background='transparent'"
+                               onclick="return confirm('⚠️ Delete this item permanently? \nClick OK to confirm.');"> 
+                                <i class="fa-solid fa-trash" style="color: #c62828; font-size: 15px;"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-5 text-muted">
+                        <i class="fa-regular fa-folder-open d-block mb-2 fs-3 text-secondary"></i>
+                        No data items registered.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 
