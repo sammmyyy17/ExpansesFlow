@@ -25,12 +25,12 @@ def manifest_view(request):
         "name": "Expense Flow Tracker",
         "icons": [
             {
-                "src": "https://expansesflow.onrender.com/static/images/logo.png",
+                "src": "https://expansesflow.onrender.com/static/image/favicon.png",
                 "type": "image/png",
                 "sizes": "192x192"
             },
             {
-                "src": "https://expansesflow.onrender.com/static/images/logo.png",
+                "src": "https://expansesflow.onrender.com/static/image/favicon.png",
                 "type": "image/png",
                 "sizes": "512x512"
             }
