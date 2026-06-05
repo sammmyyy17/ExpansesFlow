@@ -219,23 +219,23 @@
                                     <small class="text-muted">Save your statements locally or share them</small>
                                 </div>
 
-                                <div class="row g-3">
+                                 <div class="row g-3">
                                     <div class="col-6 col-sm-3">
-                                        <a href="#" class="report-box p-3 rounded-3 d-flex flex-column align-items-center justify-content-center text-decoration-none" style="background-color: #fff5f5; border: 1px solid #ffe3e3;">
+                                        <a href="{% url 'export_pdf' %}" class="report-box p-3 rounded-3 d-flex flex-column align-items-center justify-content-center text-decoration-none" style="background-color: #fff5f5; border: 1px solid #ffe3e3;">
                                             <i class="fa-solid fa-file-pdf text-danger mb-2 fs-3"></i>
                                             <span class="fw-semibold text-dark" style="font-size: 11px;">PDF Report</span>
                                         </a>
                                     </div>
 
                                     <div class="col-6 col-sm-3">
-                                        <a href="#" class="report-box p-3 rounded-3 d-flex flex-column align-items-center justify-content-center text-decoration-none" style="background-color: #f4fbf7; border: 1px solid #e1f5eb;">
+                                        <a href="{% url 'export_excel' %}" class="report-box p-3 rounded-3 d-flex flex-column align-items-center justify-content-center text-decoration-none" style="background-color: #f4fbf7; border: 1px solid #e1f5eb;">
                                             <i class="fa-solid fa-file-excel text-success mb-2 fs-3"></i>
                                             <span class="fw-semibold text-dark" style="font-size: 11px;">Excel Report</span>
                                         </a>
                                     </div>
 
-                                    <div class="col-6 col-sm-3">
-                                        <a href="#" class="report-box p-3 rounded-3 d-flex flex-column align-items-center justify-content-center text-decoration-none" style="background-color: #f0f7ff; border: 1px solid #e1efff;">
+                                    <div class="col-6 col-sm-3" onclick="printSpecificTable()">
+                                        <a href="{% url 'print_transactions' %}" target="_blank" class="report-box p-3 rounded-3 d-flex flex-column align-items-center justify-content-center text-decoration-none" style="background-color: #f0f7ff; border: 1px solid #e1efff;">
                                             <i class="fa-solid fa-print text-primary mb-2 fs-3"></i>
                                             <span class="fw-semibold text-dark" style="font-size: 11px;">Print Report</span>
                                         </a>
