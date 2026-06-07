@@ -119,7 +119,7 @@ def addtransaction(request):
     today_expnases = transaction.objects.filter(transaction_type='expanses', date=date.today()
     if today_expnases.exists():
         todayamount = today_expnases.aggregate(total=Sum('amount')['total']
-    else
+    else:
         todayamount = 0 
         
     excount=transaction.objects.filter(transaction_type='expanses', date=date.today()).count()
