@@ -125,14 +125,16 @@ def addtransaction(request):
         todayamount = 0 
     
     excount = transaction.objects.filter(transaction_type='expanses', date=date.today()).count()
+    
     today_income = transaction.objects.filter(transaction_type='income', date=date.today())
 
     if today_income.exists():
         # Fixed missing closing parenthesis at the end of .aggregate(...)
         todayiamount = today_income.aggregate(total=Sum('amount'))['total']
     else:
+        todayiamount = 0
     
-        icount= transaction.objects.filter(transaction_type='income', date=date.today()).count()
+    icount= transaction.objects.filter(transaction_type='income', date=date.today()).count()
     
     get_name = user.objects.all()
     
