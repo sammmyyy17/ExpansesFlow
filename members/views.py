@@ -116,21 +116,22 @@ def addtransaction(request):
     transaction_type = request.GET.get("type")
     data = transaction.objects.all().order_by("date")
 
-    today_expnases = transaction.objects.filter(transaction_type='expanses', date=date.today()).first()
-    if today_expnases:
-        todayamount = today_expnases.amount
-    else:
-        todayamount = 0
+    today_expnases = transaction.objects.filter(transaction_type='expanses', date=date.today()
+    if today_expnases.exists():
+        todayamount = today_expnases.aggregate(total=Sum('amount')['total']
+    else
+        todayamount = 0 
+        
     excount=transaction.objects.filter(transaction_type='expanses', date=date.today()).count()
-    today_income = transaction.objects.filter(transaction_type='income', date=date.today()).first()
-    if today_income:
-        todayiamount = today_income.amount
+    today_income = transaction.objects.filter(transaction_type='income', date=date.today())
+    
+    if today_income.exists():
+        todayiamount = today_income.aggregate(total=Sum('amount')['total']
     else:
         todayiamount = 0
+    
     icount= transaction.objects.filter(transaction_type='income', date=date.today()).count()
-    
-    
-    
+
     get_name = user.objects.all()
     
     if transaction_type:
