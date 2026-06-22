@@ -114,7 +114,7 @@ def addtransaction(request):
             return redirect('addtransaction')
         
     transaction_type = request.GET.get("type")
-    data = transaction.objects.all().order_by("date")
+    data = transaction.objects.all().order_by("-date")
 
     today_expnases = transaction.objects.filter(transaction_type='expanses', date=date.today())
 
