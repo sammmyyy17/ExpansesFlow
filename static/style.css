@@ -339,7 +339,24 @@ small {
   background-color: #ff8a80 !important; /* Warning/high alert light red */
   color: #c62828;
 }
+.heatmap-legend i{
+    border-radius: 50%;
+}
+.heatmap-legend {
+    display: flex;
+    justify-content: center;   /* center horizontally */
+    align-items: center;
+    gap: 25px;
+    flex-wrap: nowrap;
+    width: 100%;
+}
 
+.heatmap-legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
 /* Small Indicator Dots for Legend Area */
 .legend-dot {
   width: 14px;
