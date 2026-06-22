@@ -550,4 +550,7 @@ small {
     canvas {
         max-width: 100% !important;
     }
+     .heatmap-legend span {
+        font-size: 9.5px;
+    }
 }
